@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, ToastAndroid } from "react-native";
 import socket from "../socket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export default function SignUpScreen() {
     const [userId, setUserId] = useState<string | null>(null);
@@ -25,32 +26,31 @@ export default function SignUpScreen() {
         try {
             console.log(userDetails);
 
-            // const res: any = await axios.get(
-            //     `https://ets-backend-t2yw.onrender.com/api/user?user_id=${inputUserId}`
-            // );
-            // if (!res.sucess) {
-            //     ToastAndroid.showWithGravityAndOffset(
-            //         `Sign-in failed : ${res.message}`,
-            //         ToastAndroid.LONG,
-            //         ToastAndroid.BOTTOM,
-            //         25,
-            //         500
-            //     );
-            //     return;
-            // }
-            // console.log(res.data);
-            // setUserId(res.data._id);
-            // await AsyncStorage.setItem(
-            //     "userId",
-            //     JSON.stringify(res.data._id).substring(
-            //         1,
-            //         JSON.stringify(res.data._id).length - 1
-            //     )
-            // );
-            // socket.emit("register", res.data._id);
+            const res: any = await axios.post(
+                `https://ets-backend-t2yw.onrender.com/api/user/send-otp`,
+                { phone_number: userDetails.phone_no }
+            );
 
-            navigateToHome();
+            console.log("here");
+            if (!res.sucess) {
+                ToastAndroid.showWithGravityAndOffset(
+                    `Sign-in failed : ${res.message}`,
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    500
+                );
+                return;
+            }
+
+            await AsyncStorage.setItem(
+                "loginDetails",
+                JSON.stringify({ ...userDetails, is_sign_up: true })
+            );
+
+            router.navigate("/(authFragments)/VerifyOTP");
         } catch (err) {
+            console.log(err);
             ToastAndroid.showWithGravityAndOffset(
                 "Could not request back-end",
                 ToastAndroid.LONG,
@@ -58,14 +58,6 @@ export default function SignUpScreen() {
                 25,
                 500
             );
-            console.log(err);
-        }
-    };
-
-    const navigateToHome = async () => {
-        try {
-            console.log("going home...");
-        } catch (err) {
             console.log(err);
         }
     };

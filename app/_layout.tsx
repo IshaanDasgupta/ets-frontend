@@ -39,24 +39,22 @@ export default function RootLayout() {
             <Stack>
                 <Stack.Screen
                     name="(authFragments)/index"
+                    options={{ title: "Login" }}
+                />
+                <Stack.Screen
+                    name="(authFragments)/SignUpScreen"
+                    options={{ title: "Sign Up" }}
+                />
+                <Stack.Screen
+                    name="(authFragments)/VerifyOTP"
+                    options={{ title: "Verify OTP" }}
+                />
+                <Stack.Screen
+                    name="(mainFragments)"
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen name="+not-found" />
             </Stack>
-            {/*
-            {logedIn ? (
-                <Stack>
-                    <Stack.Screen
-                        name="(mainFragments)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                </Stack>
-            ) : (
-                <Stack>
-                    <SignUpScreen />
-                </Stack>
-            )} */}
         </ThemeProvider>
     );
 }
