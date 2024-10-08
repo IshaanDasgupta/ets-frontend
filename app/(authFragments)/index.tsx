@@ -83,6 +83,10 @@ export default function LoginScreen() {
                             onPress={sendOTP}
                         />
                     </ThemedView>
+
+                    <ThemedView style={styles.signUpContainer}>
+                        <ThemedText highlight>Sign Up instead</ThemedText>
+                    </ThemedView>
                 </>
             ) : (
                 <ThemedText>loading...</ThemedText>
@@ -108,6 +112,10 @@ const styles = StyleSheet.create({
 
     signInButton: {
         width: "100%",
+        marginTop: 20,
+    },
+
+    signUpContainer: {
         marginTop: 20,
     },
 });
