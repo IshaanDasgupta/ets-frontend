@@ -10,6 +10,7 @@ import { Button, Slider, Text, TextField } from "react-native-ui-lib";
 import { ThemedTextField } from "@/components/ThemedTextField";
 import { ThemedButton } from "@/components/ThemedButton";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
     const [initialRegion, setInitialRegion] = useState<any>(null);
@@ -75,9 +76,15 @@ export default function HomeScreen() {
         }
     });
 
+    const fetchUser = async () => {
+        const userId: any = await AsyncStorage.getItem("userId");
+        socket.emit("register", userId);
+    };
+
     useEffect(() => {
         checkIfLocationEnabled();
         getCurrentLocation();
+        fetchUser();
     }, []);
 
     const checkIfLocationEnabled = async () => {

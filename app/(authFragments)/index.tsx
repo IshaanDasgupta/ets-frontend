@@ -4,51 +4,45 @@ import { ThemedTextField } from "@/components/ThemedTextField";
 import { ThemedView } from "@/components/ThemedView";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text, ToastAndroid } from "react-native";
+import { StyleSheet, View, Text, ToastAndroid, Pressable } from "react-native";
 import socket from "../socket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
 export default function LoginScreen() {
     const [userId, setUserId] = useState<string | null>(null);
-    const [userDetails, setUserDetails] = useState<any>({});
-
-    const handleChange = (label: string, text: string) => {
-        setUserDetails((prevDetails: any) => {
-            return {
-                ...prevDetails,
-                [label]: text,
-            };
-        });
-    };
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
 
     const sendOTP = async () => {
         try {
-            // console.log(userDetails);
-            // const res: any = await axios.get(
-            //     `https://ets-backend-t2yw.onrender.com/api/user?user_id=${inputUserId}`
-            // );
-            // if (!res.sucess) {
-            //     ToastAndroid.showWithGravityAndOffset(
-            //         `Sign-in failed : ${res.message}`,
-            //         ToastAndroid.LONG,
-            //         ToastAndroid.BOTTOM,
-            //         25,
-            //         500
-            //     );
-            //     return;
-            // }
-            // console.log(res.data);
-            // setUserId(res.data._id);
-            // await AsyncStorage.setItem(
-            //     "userId",
-            //     JSON.stringify(res.data._id).substring(
-            //         1,
-            //         JSON.stringify(res.data._id).length - 1
-            //     )
-            // );
-            // socket.emit("register", res.data._id);
+            const res: any = await axios.post(
+                `https://ets-backend-t2yw.onrender.com/api/user/send-otp`,
+                { phone_number: phoneNumber }
+            );
+
+            console.log(res);
+            if (res.status != "200") {
+                ToastAndroid.showWithGravityAndOffset(
+                    `Sign-in failed : ${res.message}`,
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    500
+                );
+                return;
+            }
+
+            await AsyncStorage.setItem(
+                "loginDetails",
+                JSON.stringify({
+                    phone_number: phoneNumber,
+                    is_sign_up: false,
+                })
+            );
+
+            router.navigate("/(authFragments)/VerifyOTP");
         } catch (err) {
+            console.log(err);
             ToastAndroid.showWithGravityAndOffset(
                 "Could not request back-end",
                 ToastAndroid.LONG,
@@ -59,6 +53,25 @@ export default function LoginScreen() {
             console.log(err);
         }
     };
+
+    const navigateToSignUp = () => {
+        router.push("/(authFragments)/SignUpScreen");
+    };
+
+    const navigateToHome = () => {
+        router.dismissAll();
+        router.push("/(mainFragments)");
+    };
+
+    const fetchUserId = async () => {
+        const userId = await AsyncStorage.getItem("userId");
+        setUserId(userId);
+        navigateToHome();
+    };
+
+    useEffect(() => {
+        fetchUserId();
+    }, []);
 
     return (
         <ThemedView style={styles.container}>
@@ -72,9 +85,7 @@ export default function LoginScreen() {
                         <ThemedTextField
                             placeholder={"Phone no."}
                             floatingPlaceholder
-                            onChangeText={(text) =>
-                                handleChange("phone_no", text)
-                            }
+                            onChangeText={(text) => setPhoneNumber(text)}
                         />
 
                         <ThemedButton
@@ -84,9 +95,19 @@ export default function LoginScreen() {
                         />
                     </ThemedView>
 
-                    <ThemedView style={styles.signUpContainer}>
+                    <Pressable
+                        style={styles.signUpContainer}
+                        onPress={navigateToSignUp}
+                    >
                         <ThemedText highlight>Sign Up instead</ThemedText>
-                    </ThemedView>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.signUpContainer}
+                        onPress={navigateToHome}
+                    >
+                        <ThemedText highlight>Go to home</ThemedText>
+                    </Pressable>
                 </>
             ) : (
                 <ThemedText>loading...</ThemedText>
