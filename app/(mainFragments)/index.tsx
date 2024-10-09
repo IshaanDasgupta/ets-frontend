@@ -156,6 +156,7 @@ export default function HomeScreen() {
 
     return (
         <ThemedView style={styles.container}>
+            <ThemedButton style={styles.toggleButton} label="Toggle"></ThemedButton>
             <MapView
                 style={styles.map}
                 initialRegion={initialRegion}
@@ -279,4 +280,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 30,
     },
+    toggleButton:{
+        position: 'absolute',
+        top: 10,
+        right : 60,
+        zIndex: 10
+    }
 });

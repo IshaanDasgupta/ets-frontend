@@ -78,7 +78,7 @@ export default function HomeScreen() {
             latitude: coords.latitude,
             longitude: coords.longitude,
         });
-
+        console.log(coords)
         setInitialRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -91,7 +91,7 @@ export default function HomeScreen() {
 
     return (
         <ThemedView style={styles.container}>
-            
+            <ThemedButton style={styles.toggleButton} label="Toggle"></ThemedButton>
             <DrawerLayoutAndroid
                 ref={drawer}
                 drawerWidth={300}
@@ -118,11 +118,11 @@ export default function HomeScreen() {
                         )} */}
                         <Marker
                             coordinate={{
-                                latitude: locationCoordinates.latitude,
-                                longitude: locationCoordinates.longitude,
+                                latitude: 22.731033,
+                                longitude: 75.874595,
                             }}
                             title="Helper"
-                            description="ishaan dasgupta"
+                            description="Aditya Malviya"
                         />
                     </MapView>
                 <View style={styles.container}>
@@ -204,4 +204,10 @@ const styles = StyleSheet.create({
       infoContainer: {
         marginBottom: 20,
       },
+      toggleButton:{
+        position: 'absolute',
+        top: 10,
+        right : 60,
+        zIndex: 10
+    }
 });
