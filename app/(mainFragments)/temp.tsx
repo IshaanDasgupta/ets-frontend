@@ -1,4 +1,11 @@
-import { StyleSheet, View, Alert, TouchableOpacity, DrawerLayoutAndroid, Image} from "react-native";
+import {
+    StyleSheet,
+    View,
+    Alert,
+    TouchableOpacity,
+    DrawerLayoutAndroid,
+    Image,
+} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { useEffect, useState, useRef } from "react";
@@ -18,25 +25,25 @@ export default function HomeScreen() {
 
     const navigationView = () => (
         <View style={styles.drawerContainer}>
-          <Text style={styles.header}>Service Provider Information</Text>
-          
-          {/* <Image 
+            <Text style={styles.header}>Service Provider Information</Text>
+
+            {/* <Image 
             source={{ uri: person.image }} 
             style={styles.image} 
           /> */}
-          
-          <View style={styles.infoContainer}>
-            <Text style={styles.paragraph}>First Name: Ishan</Text>
-            <Text style={styles.paragraph}>Last Name: Dasgupta</Text>
-            <Text style={styles.paragraph}>Phone Number: 7898261362</Text>
-          </View>
-      
-          <Button
-            label="Close Info"
-            onPress={() => drawer.current?.closeDrawer()}
-          />
+
+            <View style={styles.infoContainer}>
+                <Text style={styles.paragraph}>First Name: Aditya</Text>
+                <Text style={styles.paragraph}>Last Name: Baghel</Text>
+                <Text style={styles.paragraph}>Phone Number: 7898261362</Text>
+            </View>
+
+            <Button
+                label="Close Info"
+                onPress={() => drawer.current?.closeDrawer()}
+            />
         </View>
-      );
+    );
     useEffect(() => {
         checkIfLocationEnabled();
         getCurrentLocation();
@@ -85,25 +92,23 @@ export default function HomeScreen() {
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
         });
-
     };
-
 
     return (
         <ThemedView style={styles.container}>
-            
             <DrawerLayoutAndroid
                 ref={drawer}
                 drawerWidth={300}
-                drawerPosition='right'
-                renderNavigationView={navigationView}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={initialRegion}
-                        showsUserLocation
-                        provider={PROVIDER_GOOGLE}
-                    >
-                        {/* {helpAccepted && helperLocation ? (
+                drawerPosition="right"
+                renderNavigationView={navigationView}
+            >
+                <MapView
+                    style={styles.map}
+                    initialRegion={initialRegion}
+                    showsUserLocation
+                    provider={PROVIDER_GOOGLE}
+                >
+                    {/* {helpAccepted && helperLocation ? (
                             // <ThemedText>{helperLocation.latitude}</ThemedText>
                             <Marker
                                 coordinate={{
@@ -116,19 +121,19 @@ export default function HomeScreen() {
                         ) : (
                             <ThemedText>loading...</ThemedText>
                         )} */}
-                        <Marker
-                            coordinate={{
-                                latitude: locationCoordinates.latitude,
-                                longitude: locationCoordinates.longitude,
-                            }}
-                            title="Helper"
-                            description="ishaan dasgupta"
-                        />
-                    </MapView>
+                    <Marker
+                        coordinate={{
+                            latitude: 22.731033,
+                            longitude: 75.874595,
+                        }}
+                        title="Helper"
+                        description="aditya baghel"
+                    />
+                </MapView>
                 <View style={styles.container}>
                     <Button
-                    label="Show Helper Information"
-                    onPress={() => drawer.current?.openDrawer()}
+                        label="Show Helper Information"
+                        onPress={() => drawer.current?.openDrawer()}
                     />
                 </View>
             </DrawerLayoutAndroid>
@@ -177,31 +182,31 @@ const styles = StyleSheet.create({
     },
     drawerContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         padding: 16,
-      },
-      navigationContainer: {
-        backgroundColor: '#ecf0f1',
-        height: '100%',
-      },
-      paragraph: {
+    },
+    navigationContainer: {
+        backgroundColor: "#ecf0f1",
+        height: "100%",
+    },
+    paragraph: {
         padding: 16,
         fontSize: 15,
-        textAlign: 'center',
-      },
-      header: {
+        textAlign: "center",
+    },
+    header: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginBottom: 20,
-      },
-      image: {
+    },
+    image: {
         width: 100,
         height: 100,
         borderRadius: 50,
         marginBottom: 20,
-      },
-      infoContainer: {
+    },
+    infoContainer: {
         marginBottom: 20,
-      },
+    },
 });

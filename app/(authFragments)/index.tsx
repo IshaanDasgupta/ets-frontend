@@ -64,6 +64,7 @@ export default function LoginScreen() {
     };
 
     const fetchUserId = async () => {
+        await AsyncStorage.removeItem("userId");
         const userId = await AsyncStorage.getItem("userId");
         setUserId(userId);
         navigateToHome();

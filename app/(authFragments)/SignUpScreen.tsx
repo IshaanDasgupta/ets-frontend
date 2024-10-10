@@ -31,8 +31,8 @@ export default function SignUpScreen() {
                 { phone_number: userDetails.phone_no }
             );
 
-            console.log("here");
-            if (!res.sucess) {
+            console.log(res.data);
+            if (!res.data) {
                 ToastAndroid.showWithGravityAndOffset(
                     `Sign-in failed : ${res.message}`,
                     ToastAndroid.LONG,
