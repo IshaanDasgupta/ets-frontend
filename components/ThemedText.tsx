@@ -6,7 +6,7 @@ export type ThemedTextProps = TextProps & {
     lightColor?: string;
     darkColor?: string;
     highlight?: boolean;
-    type?: "default" | "title" | "desc";
+    type?: "default" | "title" | "subTitle" | "desc";
 };
 
 export function ThemedText({
@@ -27,6 +27,7 @@ export function ThemedText({
                 { color },
                 type === "default" ? styles.default : undefined,
                 type === "title" ? styles.title : undefined,
+                type === "subTitle" ? styles.subTitle : undefined,
                 type === "desc" ? styles.desc : undefined,
                 style,
             ]}
@@ -42,9 +43,15 @@ const styles = StyleSheet.create({
         fontWeight: "300",
     },
     title: {
-        fontSize: 28,
+        fontSize: 20,
         fontWeight: "300",
         lineHeight: 32,
+        marginBottom: 10,
+    },
+    subTitle: {
+        fontSize: 18,
+        fontWeight: "500",
+        lineHeight: 30,
         marginBottom: 10,
     },
     desc: {

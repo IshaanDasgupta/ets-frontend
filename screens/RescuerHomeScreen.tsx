@@ -4,9 +4,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
-import socket from "../socket";
+import socket from "../app/socket";
 
-export default function HelpProviderScreen() {
+export default function RescuerHomeScreen() {
     const [userId, setUserId] = useState<string | null | undefined>(undefined);
     const [helpRequests, setHelpRequests] = useState<any>([]);
 

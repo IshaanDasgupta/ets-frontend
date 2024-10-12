@@ -14,5 +14,5 @@ export function ThemedTextField({
     ...otherProps
 }: ThemedTextFieldProps) {
     const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-    return <TextField style={[{ color }, style]} {...otherProps} />;
+    return <TextField {...otherProps} color={color} />;
 }

@@ -18,64 +18,60 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Request Help",
+                    headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabBarIcon
                             name={focused ? "home" : "home-outline"}
                             color={color}
+                            size={25}
                         />
                     ),
-                }}
-            />
-            <Tabs.Screen
-                name="helpprovider"
-                options={{
-                    title: "Help Requests",
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon
-                            name={focused ? "home" : "home-outline"}
-                            color={color}
-                        />
-                    ),
+                    tabBarShowLabel: false,
                 }}
             />
             <Tabs.Screen
                 name="history"
                 options={{
-                    title: "History",
+                    headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabBarIcon
-                            name={focused ? "code-slash" : "code-slash-outline"}
+                            name={focused ? "timer" : "timer-outline"}
                             color={color}
+                            size={25}
                         />
                     ),
+                    tabBarShowLabel: false,
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: "Profile",
+                    headerShown: false,
+
                     tabBarIcon: ({ color, focused }) => (
                         <TabBarIcon
-                            name={focused ? "home" : "home-outline"}
+                            name={focused ? "person" : "person-outline"}
                             color={color}
+                            size={25}
                         />
                     ),
+                    tabBarShowLabel: false,
                 }}
             />
             <Tabs.Screen
                 name="temp"
                 options={{
-                    title: "Temp Page",
+                    headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabBarIcon
                             name={focused ? "home" : "home-outline"}
                             color={color}
+                            size={25}
                         />
                     ),
+                    tabBarShowLabel: false,
                 }}
             />
         </Tabs>
-        
     );
 }
