@@ -13,13 +13,18 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserHomeScreen from "@/screens/UserHomeScreen";
 import RescuerHomeScreen from "@/screens/RescuerHomeScreen";
-import TempHome from "./temp";
+// import MillanHomeScreen from "@/screens/MilanHomeScreen";
 import { ThemedHeader } from "@/components/ThemedHeader";
+import MillanHomeScreen from "@/screens/MilanHomeScreen";
 
 export default function HomeScreen() {
     const [screenState, setScreenState] = useState<string | null>(null);
 
     const fetchHome = async () => {
+        // await AsyncStorage.removeItem("home");
+        // await AsyncStorage.removeItem("helpId");
+        // await AsyncStorage.removeItem("loginDetails");
+
         let home: string | null = await AsyncStorage.getItem("home");
         if (home === null) {
             await AsyncStorage.setItem("home", "User Home");
@@ -43,9 +48,15 @@ export default function HomeScreen() {
                                 setScreenState={setScreenState}
                                 toggle
                             />
-                            {screenState === "User Home" && <UserHomeScreen />}
+                            {screenState === "User Home" && (
+                                <UserHomeScreen
+                                    setScreenState={setScreenState}
+                                />
+                            )}
                             {screenState === "Rescuer Home" && (
-                                <RescuerHomeScreen />
+                                <RescuerHomeScreen
+                                    setScreenState={setScreenState}
+                                />
                             )}
                         </>
                     )}
@@ -56,7 +67,8 @@ export default function HomeScreen() {
                                 headerText={screenState}
                                 setScreenState={setScreenState}
                             />
-                            <TempHome />
+
+                            <MillanHomeScreen />
                         </>
                     )}
                 </>

@@ -58,20 +58,6 @@ export default function TabLayout() {
                     tabBarShowLabel: false,
                 }}
             />
-            <Tabs.Screen
-                name="temp"
-                options={{
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon
-                            name={focused ? "home" : "home-outline"}
-                            color={color}
-                            size={25}
-                        />
-                    ),
-                    tabBarShowLabel: false,
-                }}
-            />
         </Tabs>
     );
 }

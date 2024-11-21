@@ -12,80 +12,105 @@ import { ThemedButton } from "@/components/ThemedButton";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function UserHomeScreen() {
+export default function UserHomeScreen({ setScreenState }) {
     const [initialRegion, setInitialRegion] = useState<any>(null);
     const [locationCoordinates, setLocationCoordinates] = useState<any>(null);
-
     const [reqeustHelp, setRequestHelp] = useState(false);
-    const [helpAccepted, setHelpAccepted] = useState(false);
     const [helpData, setHelpData] = useState({});
-    const [acceptedHelpData, setAcceptedHelpData] = useState<any>(null);
-    const [helperLocation, setHelperLocation] = useState<any>(null);
-    const [helpId, setHelpId] = useState<string | null>(null);
 
     const [requestingHelp, setRequestingHelp] = useState(false);
+    const [helpId, setHelpId] = useState<string | null>(null);
 
-    socket.on("connect", () => {
-        console.log("Connected to server");
-    });
+    useEffect(() => {
+        socket.on("connect", () => {
+            console.log("Connected to server");
+        });
 
-    socket.on("disconnect", () => {
-        console.log("Disconnected from server");
-    });
+        socket.on("disconnect", (reason: string) => {
+            console.log("Disconnected from server, Reason ", reason);
+            if (reason === "io server disconnect") {
+                socket.connect();
+            }
+        });
 
-    socket.on("location_response", (payload: any) => {
-        console.log("helper location : ", payload, " lati ", payload.latitude);
-        setHelperLocation(payload);
-    });
+        // socket.on("location_response", (payload: any) => {
+        //     console.log(
+        //         "helper location : ",
+        //         payload,
+        //         " lati ",
+        //         payload.latitude
+        //     );
+        //     setHelperLocation(payload);
+        // });
 
-    socket.on("help_request_response", (payload: any) => {
-        console.log("help req response", payload);
-        Alert.alert(payload.message);
-        if (payload.success) {
+        socket.on("help_request_response", async (payload: any) => {
+            console.log("help req response", payload);
+            Alert.alert(payload.message);
+            if (payload.success) {
+                setRequestHelp(false);
+                setRequestingHelp(true);
+                setHelpId(payload.help_id);
+                await AsyncStorage.setItem("helpId", payload.help_id);
+            }
+        });
+
+        socket.on("help_request_failed", (payload: any) => {
+            console.log("help req failed", payload);
+            Alert.alert(payload.message);
             setRequestHelp(false);
-            setRequestingHelp(true);
-            setHelpId(payload.help_id);
-        }
-    });
+            setRequestingHelp(false);
+        });
 
-    socket.on("help_request_failed", (payload: any) => {
-        console.log("help req failed", payload);
-        Alert.alert(payload.message);
-        setRequestHelp(false);
-        setRequestingHelp(false);
-    });
+        socket.on("help_accepted", async () => {
+            console.log("help accepted !!!! should be in DB");
+            setRequestHelp(false);
+            setRequestingHelp(false);
+            // setHelpAccepted(true);
 
-    socket.on("help_accepted", async () => {
-        console.log("help accepted !!!! should be in DB");
-        setRequestHelp(false);
-        setRequestingHelp(false);
-        setHelpAccepted(true);
+            await AsyncStorage.setItem("home", "InProgress Home");
+            setScreenState("InProgress Home");
 
-        try {
-            console.log("help_id : ", helpId);
-            const res = await axios.get(
-                `https://ets-backend-t2yw.onrender.com/api/help?help_id=${helpId}`
-            );
+            // try {
+            //     console.log("help_id : ", helpId);
+            //     const res = await axios.get(
+            //         `https://ets-backend-t2yw.onrender.com/api/help?help_id=${helpId}`
+            //     );
 
-            console.log("accepted help data : ", res.data);
-            setAcceptedHelpData(res.data);
+            //     console.log("accepted help data : ", res.data);
+            //     // setAcceptedHelpData(res.data);
 
-            socket.emit("get_user_location", res.data.helper._id);
-        } catch (err) {
-            console.log(err);
-        }
-    });
+            //     socket.emit("get_user_location", res.data.helper._id);
+            // } catch (err) {
+            //     console.log(err);
+            // }
+        });
+
+        return () => {
+            socket.off("connect");
+            socket.off("disconnect");
+            // socket.off("location_response");
+            socket.off("help_request_response");
+            socket.off("help_request_failed");
+            socket.off("help_accepted");
+            socket.emit("force_disconnect");
+        };
+    }, []);
 
     const fetchUser = async () => {
+        await AsyncStorage.setItem("userId", "6709632258b2701f6f294c62");
         const userId: any = await AsyncStorage.getItem("userId");
         socket.emit("register", userId);
     };
 
     useEffect(() => {
-        checkIfLocationEnabled();
-        getCurrentLocation();
-        fetchUser();
+        asyncDriver();
     }, []);
+
+    const asyncDriver = async () => {
+        await checkIfLocationEnabled();
+        await getCurrentLocation();
+        await fetchUser();
+    };
 
     const checkIfLocationEnabled = async () => {
         let enabled = await Location.hasServicesEnabledAsync();
@@ -162,8 +187,8 @@ export default function UserHomeScreen() {
                 showsUserLocation
                 provider={PROVIDER_GOOGLE}
             >
-                {helpAccepted && helperLocation ? (
-                    // <ThemedText>{helperLocation.latitude}</ThemedText>
+                {/* {helpAccepted && helperLocation ? (
+                    <ThemedText>{helperLocation.latitude}</ThemedText>
                     <Marker
                         coordinate={{
                             latitude: helperLocation.latitude,
@@ -174,17 +199,13 @@ export default function UserHomeScreen() {
                     />
                 ) : (
                     <ThemedText>loading...</ThemedText>
-                )}
+                )} */}
             </MapView>
 
-            {!helpAccepted && (
-                <ThemedButton
-                    style={styles.helpButton}
-                    onPress={triggerHelpForm}
-                >
-                    <ThemedText>Request Help !</ThemedText>
-                </ThemedButton>
-            )}
+            <ThemedButton style={styles.helpButton} onPress={triggerHelpForm}>
+                <ThemedText>Request Help !</ThemedText>
+            </ThemedButton>
+
             {reqeustHelp && (
                 <ThemedView
                     style={styles.helpForm}

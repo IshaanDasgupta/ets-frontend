@@ -6,29 +6,32 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { StyleSheet } from "react-native";
 import axios from "axios";
 import socket from "@/app/socket";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type HelpRequestCardProps = {
     data: any;
     helpRequests: any;
     setHelpRequests: any;
-    userId: string;
+    setScreenState: any;
 };
 
 export function HelpRequestCard({
     data,
     helpRequests,
     setHelpRequests,
-    userId,
+    setScreenState,
 }: HelpRequestCardProps) {
-    console.log("\n\n", data, "\n\n\n");
-
-    const acceptHelp = () => {
+    const acceptHelp = async () => {
         socket.emit("help_accepted", data._id);
-        //implement accepting help
+
+        await AsyncStorage.setItem("helpId", data._id);
+        await AsyncStorage.setItem("home", "InProgress Home");
+
+        setScreenState("InProgress Home");
     };
 
     const rejectHelp = async () => {
-        console.log("----------------");
         console.log(data._id);
         console.log(helpRequests);
         const newHelpRequests = helpRequests.filter((helpRequest: any) => {

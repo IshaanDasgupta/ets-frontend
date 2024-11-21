@@ -19,17 +19,23 @@ import { AntDesign } from "@expo/vector-icons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ThemedHeader } from "@/components/ThemedHeader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function TempHome() {
+export default function MillanHomeScreen() {
     const [initialRegion, setInitialRegion] = useState<any>(null);
     const [locationCoordinates, setLocationCoordinates] = useState<any>(null);
     const [infoSize, setInfoSize] = useState<any>("min");
     const drawer = useRef<DrawerLayoutAndroid>(null);
 
     useEffect(() => {
-        checkIfLocationEnabled();
-        getCurrentLocation();
+        asyncDriver();
     }, []);
+
+    const asyncDriver = async () => {
+        await checkIfLocationEnabled();
+        await getCurrentLocation();
+        await fetchHelpData();
+    };
 
     const checkIfLocationEnabled = async () => {
         let enabled = await Location.hasServicesEnabledAsync();
@@ -76,6 +82,12 @@ export default function TempHome() {
         });
     };
 
+    const fetchHelpData = async () => {
+        console.log("here");
+        const helpId = await AsyncStorage.getItem("helpId");
+        console.log("help id is : ", helpId);
+    };
+
     function getInfoStyle(infoSize: any) {
         if ((infoSize = "max")) {
             return {
@@ -91,7 +103,6 @@ export default function TempHome() {
 
     return (
         <>
-            <ThemedHeader headerText="Milan" />
             <ThemedView style={styles.container}>
                 <MapView
                     style={styles.map}
